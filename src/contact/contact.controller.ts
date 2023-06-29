@@ -10,10 +10,12 @@ import {
 	Put,
 	ValidationPipe,
 } from '@nestjs/common';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { ContactService } from './contact.service';
 import { CreateContactDto, UpdateContactDto, FavoriteContactDto } from './dto';
 
+@ApiTags('Contacts')
 @Controller('contact')
 export class ContactController {
 	constructor(private readonly contactService: ContactService) {}
@@ -32,6 +34,7 @@ export class ContactController {
 		return res;
 	}
 
+	@ApiResponse({ type: CreateContactDto })
 	@Post()
 	async create(@Body(ValidationPipe) dto: CreateContactDto) {
 		return await this.contactService.create(dto);
@@ -46,6 +49,7 @@ export class ContactController {
 		return { message: 'contact deleted' };
 	}
 
+	@ApiResponse({ type: UpdateContactDto })
 	@Put(':id')
 	async update(
 		@Param('id') id: string,
@@ -58,6 +62,7 @@ export class ContactController {
 		return res;
 	}
 
+	@ApiResponse({ type: FavoriteContactDto })
 	@Patch(':id/favorite')
 	async updateFavorite(
 		@Param('id') id: string,
