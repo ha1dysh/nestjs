@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { Contact } from './contact.schema';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
+import { FavoriteContactDto } from './dto/favorite-contact.dto';
 
 @Injectable()
 export class ContactService {
@@ -33,5 +34,9 @@ export class ContactService {
 			return { message: 'missing fields' };
 		}
 		return await this.contactModel.findByIdAndUpdate(id, dto);
+	}
+
+	async updateFavorite(id: string, dto: FavoriteContactDto) {
+		return await this.contactModel.findByIdAndUpdate(id, dto, { new: true });
 	}
 }

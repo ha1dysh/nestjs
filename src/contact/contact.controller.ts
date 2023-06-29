@@ -5,6 +5,7 @@ import {
 	Get,
 	NotFoundException,
 	Param,
+	Patch,
 	Post,
 	Put,
 	ValidationPipe,
@@ -13,6 +14,7 @@ import {
 import { ContactService } from './contact.service';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
+import { FavoriteContactDto } from './dto/favorite-contact.dto';
 
 @Controller('contact')
 export class ContactController {
@@ -52,6 +54,18 @@ export class ContactController {
 		@Body(ValidationPipe) dto: UpdateContactDto,
 	) {
 		const res = await this.contactService.updateById(id, dto);
+		if (!res) {
+			throw new NotFoundException();
+		}
+		return res;
+	}
+
+	@Patch(':id/favorite')
+	async updateFavorite(
+		@Param('id') id: string,
+		@Body(ValidationPipe) dto: FavoriteContactDto,
+	) {
+		const res = await this.contactService.updateFavorite(id, dto);
 		if (!res) {
 			throw new NotFoundException();
 		}
