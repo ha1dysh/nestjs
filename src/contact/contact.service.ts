@@ -3,9 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { Contact } from './contact.schema';
-import { CreateContactDto } from './dto/create-contact.dto';
-import { UpdateContactDto } from './dto/update-contact.dto';
-import { FavoriteContactDto } from './dto/favorite-contact.dto';
+import { CreateContactDto, UpdateContactDto, FavoriteContactDto } from './dto';
 
 @Injectable()
 export class ContactService {
