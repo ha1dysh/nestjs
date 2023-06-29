@@ -3,13 +3,13 @@ import { HydratedDocument } from 'mongoose';
 
 export type ContactDocument = HydratedDocument<Contact>;
 
-@Schema()
+@Schema({ versionKey: false })
 export class Contact {
 	@Prop({ required: true })
 	name: string;
 
 	@Prop()
-	email: number;
+	email: string;
 
 	@Prop()
 	phone: string;
