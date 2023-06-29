@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { mongoConfig } from './_configs/mongo.config';
 import { ContactModule } from './contact/contact.module';
+import { UserModule } from './user/user.module';
 
 @Module({
 	imports: [
@@ -14,6 +15,7 @@ import { ContactModule } from './contact/contact.module';
 			useFactory: mongoConfig,
 		}),
 		ContactModule,
+		UserModule,
 	],
 })
 export class AppModule {}
