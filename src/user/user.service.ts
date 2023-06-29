@@ -13,11 +13,11 @@ export class UserService {
 	) {}
 
 	async create(dto: CreateUserDto) {
-		if (await this.userModel.find({ email: dto.email })) {
+		const oldUser = await this.userModel.find({ email: dto.email });
+		if (oldUser) {
 			throw new ConflictException('Email in use');
 		}
 		const password = await hash(dto.password, 10);
-
 		return await this.userModel.create({ ...dto, hashPass: password });
 	}
 }
