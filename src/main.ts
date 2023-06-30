@@ -7,7 +7,7 @@ async function bootstrap() {
 	app.setGlobalPrefix('api');
 
 	const config = new DocumentBuilder()
-		.setTitle('Cats example')
+		.setTitle('Contacts app')
 		.setVersion('1.0.0')
 		.build();
 	const document = SwaggerModule.createDocument(app, config);
