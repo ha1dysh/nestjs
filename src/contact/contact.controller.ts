@@ -8,11 +8,15 @@ import {
 	Patch,
 	Post,
 	Put,
+	Query,
+	UseGuards,
 	ValidationPipe,
 } from '@nestjs/common';
+import { Query as ExpressQuery } from 'express-serve-static-core';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { ContactService } from './contact.service';
+import { JwtGuard } from 'src/auth/jwt-guard';
 import { CreateContactDto, UpdateContactDto, FavoriteContactDto } from './dto';
 
 @ApiTags('Contacts')
@@ -20,9 +24,10 @@ import { CreateContactDto, UpdateContactDto, FavoriteContactDto } from './dto';
 export class ContactController {
 	constructor(private readonly contactService: ContactService) {}
 
+	@UseGuards(JwtGuard)
 	@Get()
-	async get() {
-		return await this.contactService.find();
+	async get(@Query() query: ExpressQuery) {
+		return await this.contactService.find(query);
 	}
 
 	@Get(':id')
