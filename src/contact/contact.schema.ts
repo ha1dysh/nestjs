@@ -1,11 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
+import mongoose, { Document, HydratedDocument } from 'mongoose';
 import { User } from 'src/user/user.schema';
 
 export type ContactDocument = HydratedDocument<Contact>;
 
 @Schema({ versionKey: false })
-export class Contact {
+export class Contact extends Document {
 	@Prop({ required: true })
 	name: string;
 

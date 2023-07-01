@@ -1,29 +1,36 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { compare } from 'bcryptjs';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { User } from 'src/user/user.schema';
 import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthService {
-	constructor(private readonly userService: UserService) {}
+	constructor(
+		private readonly userService: UserService,
+		private readonly jwtService: JwtService,
+		private readonly configService: ConfigService,
+	) {}
 
 	async signup(dto: CreateUserDto) {
-		const res = (await this.userService.create(dto)).toObject();
-		delete res.hashPass;
-		return res;
+		const user = (await this.userService.create(dto)).toObject();
+		delete user.hashPass;
+		return { ...user, token: await this.genToken(user) };
 	}
 
 	async signin(dto: Pick<CreateUserDto, 'email' | 'password'>) {
-		const user = await this.userService.find(dto.email);
-		if (!user) {
-			throw new UnauthorizedException();
-		}
+		const user = await this.userService.validate(dto);
+		return { email: dto.email, token: await this.genToken(user) };
+	}
 
-		const validPass = await compare(dto.password, user.hashPass);
-		if (!validPass) {
-			throw new UnauthorizedException();
-		}
-
-		return { email: user.email, token: '' };
+	async genToken({ email, _id }: User) {
+		return await this.jwtService.signAsync(
+			{ email, _id },
+			{
+				secret: this.configService.get('JWT_SECRET'),
+				expiresIn: this.configService.get('JWT_EXPIRE'),
+			},
+		);
 	}
 }
