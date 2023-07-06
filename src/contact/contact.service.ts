@@ -12,20 +12,20 @@ export class ContactService {
 		@InjectModel(Contact.name) private readonly contactModel: Model<Contact>,
 	) {}
 
-	async find(query: ExpressQuery) {
+	async find(owner: string, query: ExpressQuery) {
 		const perPage = 20;
 		const currentPage = Number(query.page) || 1;
 		const skip = perPage * (currentPage - 1);
 
-		return await this.contactModel.find().limit(perPage).skip(skip);
+		return await this.contactModel.find({ owner }).limit(perPage).skip(skip);
 	}
 
 	async findById(id: string) {
 		return await this.contactModel.findById(id);
 	}
 
-	async create(dto: CreateContactDto) {
-		return await this.contactModel.create(dto);
+	async create(dto: CreateContactDto, id: string) {
+		return await this.contactModel.create({ ...dto, owner: id });
 	}
 
 	async deleteById(id: string) {

@@ -29,7 +29,7 @@ export class AuthService {
 			{ email, _id },
 			{
 				secret: this.configService.get('JWT_SECRET'),
-				expiresIn: this.configService.get('JWT_EXPIRE'),
+				expiresIn: Number(this.configService.get('JWT_EXPIRE')),
 			},
 		);
 	}

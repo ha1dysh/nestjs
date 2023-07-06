@@ -16,9 +16,10 @@ import { Query as ExpressQuery } from 'express-serve-static-core';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { ContactService } from './contact.service';
-import { JwtGuard } from 'src/auth/jwt-guard';
+import { JwtGuard } from 'src/_common/jwt-guard';
 import { CreateContactDto, UpdateContactDto, FavoriteContactDto } from './dto';
-import { IdValidationPipe } from 'src/_pipes/id-validation.pipe';
+import { IdValidationPipe } from 'src/_common/id-validation.pipe';
+import { UserId } from 'src/_common/user-id.decorator';
 
 @ApiTags('Contacts')
 @Controller('contact')
@@ -27,10 +28,11 @@ export class ContactController {
 
 	@UseGuards(JwtGuard)
 	@Get()
-	async get(@Query() query: ExpressQuery) {
-		return await this.contactService.find(query);
+	async get(@Query() query: ExpressQuery, @UserId() id: string) {
+		return await this.contactService.find(id, query);
 	}
 
+	@UseGuards(JwtGuard)
 	@Get(':id')
 	async getById(@Param('id', IdValidationPipe) id: string) {
 		const res = await this.contactService.findById(id);
@@ -41,11 +43,16 @@ export class ContactController {
 	}
 
 	@ApiResponse({ type: CreateContactDto })
+	@UseGuards(JwtGuard)
 	@Post()
-	async create(@Body(ValidationPipe) dto: CreateContactDto) {
-		return await this.contactService.create(dto);
+	async create(
+		@Body(ValidationPipe) dto: CreateContactDto,
+		@UserId() id: string,
+	) {
+		return await this.contactService.create(dto, id);
 	}
 
+	@UseGuards(JwtGuard)
 	@Delete(':id')
 	async deleteById(@Param('id', IdValidationPipe) id: string) {
 		const res = await this.contactService.deleteById(id);
@@ -56,6 +63,7 @@ export class ContactController {
 	}
 
 	@ApiResponse({ type: UpdateContactDto })
+	@UseGuards(JwtGuard)
 	@Put(':id')
 	async update(
 		@Param('id', IdValidationPipe) id: string,
@@ -69,6 +77,7 @@ export class ContactController {
 	}
 
 	@ApiResponse({ type: FavoriteContactDto })
+	@UseGuards(JwtGuard)
 	@Patch(':id/favorite')
 	async updateFavorite(
 		@Param('id', IdValidationPipe) id: string,
