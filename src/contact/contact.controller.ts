@@ -18,6 +18,7 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ContactService } from './contact.service';
 import { JwtGuard } from 'src/auth/jwt-guard';
 import { CreateContactDto, UpdateContactDto, FavoriteContactDto } from './dto';
+import { IdValidationPipe } from 'src/_pipes/id-validation.pipe';
 
 @ApiTags('Contacts')
 @Controller('contact')
@@ -31,7 +32,7 @@ export class ContactController {
 	}
 
 	@Get(':id')
-	async getById(@Param('id') id: string) {
+	async getById(@Param('id', IdValidationPipe) id: string) {
 		const res = await this.contactService.findById(id);
 		if (!res) {
 			throw new NotFoundException();
@@ -46,7 +47,7 @@ export class ContactController {
 	}
 
 	@Delete(':id')
-	async deleteById(@Param('id') id: string) {
+	async deleteById(@Param('id', IdValidationPipe) id: string) {
 		const res = await this.contactService.deleteById(id);
 		if (!res) {
 			throw new NotFoundException();
@@ -57,7 +58,7 @@ export class ContactController {
 	@ApiResponse({ type: UpdateContactDto })
 	@Put(':id')
 	async update(
-		@Param('id') id: string,
+		@Param('id', IdValidationPipe) id: string,
 		@Body(ValidationPipe) dto: UpdateContactDto,
 	) {
 		const res = await this.contactService.updateById(id, dto);
@@ -70,7 +71,7 @@ export class ContactController {
 	@ApiResponse({ type: FavoriteContactDto })
 	@Patch(':id/favorite')
 	async updateFavorite(
-		@Param('id') id: string,
+		@Param('id', IdValidationPipe) id: string,
 		@Body(ValidationPipe) dto: FavoriteContactDto,
 	) {
 		const res = await this.contactService.updateFavorite(id, dto);
