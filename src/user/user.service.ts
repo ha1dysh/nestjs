@@ -8,11 +8,13 @@ import { Model } from 'mongoose';
 import { compare, hash } from 'bcryptjs';
 import { User } from './user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
+import { SendgridService } from 'src/sendgrid/sendgrid.service';
 
 @Injectable()
 export class UserService {
 	constructor(
 		@InjectModel(User.name) private readonly userModel: Model<User>,
+		private readonly sendgridService: SendgridService,
 	) {}
 
 	async create(dto: CreateUserDto) {
@@ -21,6 +23,7 @@ export class UserService {
 			throw new ConflictException('Email in use');
 		}
 		const hashPass = await hash(dto.password, 10);
+		await this.sendgridService.sendEmail(dto.email);
 		return await this.userModel.create({ ...dto, hashPass });
 	}
 

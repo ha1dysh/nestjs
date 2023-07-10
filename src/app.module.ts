@@ -6,6 +6,7 @@ import { ContactModule } from './contact/contact.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { FilesModule } from './files/files.module';
+import { SendgridModule } from './sendgrid/sendgrid.module';
 
 @Module({
 	imports: [
@@ -21,6 +22,7 @@ import { FilesModule } from './files/files.module';
 		UserModule,
 		AuthModule,
 		FilesModule,
+		SendgridModule,
 	],
 })
 export class AppModule {}
