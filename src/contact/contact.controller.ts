@@ -14,7 +14,6 @@ import {
 } from '@nestjs/common';
 import { Query as ExpressQuery } from 'express-serve-static-core';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-
 import { ContactService } from './contact.service';
 import { JwtGuard } from 'src/_common/jwt-guard';
 import { CreateContactDto, UpdateContactDto, FavoriteContactDto } from './dto';
@@ -28,8 +27,8 @@ export class ContactController {
 
 	@UseGuards(JwtGuard)
 	@Get()
-	async get(@Query() query: ExpressQuery, @UserId() id: string) {
-		return await this.contactService.find(id, query);
+	async get(@Query() query: ExpressQuery, @UserId() owner: string) {
+		return await this.contactService.find(owner, query);
 	}
 
 	@UseGuards(JwtGuard)

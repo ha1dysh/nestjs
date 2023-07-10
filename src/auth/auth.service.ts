@@ -19,9 +19,9 @@ export class AuthService {
 		return { ...user, token: await this.genToken(user) };
 	}
 
-	async signin(dto: Pick<CreateUserDto, 'email' | 'password'>) {
-		const user = await this.userService.validate(dto);
-		return { email: dto.email, token: await this.genToken(user) };
+	async signin({ email, password }: Pick<CreateUserDto, 'email' | 'password'>) {
+		const user = await this.userService.validate(email, password);
+		return { email, token: await this.genToken(user) };
 	}
 
 	async genToken({ email, _id }: User) {

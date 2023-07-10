@@ -12,6 +12,9 @@ export class CreateUserDto {
 
 	@ApiProperty({ required: false })
 	@IsOptional()
-	@IsEnum(['starter', 'pro', 'business'])
+	@IsEnum(['starter', 'pro', 'business'], {
+		message:
+			'subscription must be one of the following values: starter, pro or business',
+	})
 	subscription: ['starter', 'pro', 'business'];
 }

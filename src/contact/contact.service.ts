@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Query as ExpressQuery } from 'express-serve-static-core';
-
 import { Contact } from './contact.schema';
 import { CreateContactDto, UpdateContactDto, FavoriteContactDto } from './dto';
 
@@ -17,7 +16,10 @@ export class ContactService {
 		const currentPage = Number(query.page) || 1;
 		const skip = perPage * (currentPage - 1);
 
-		return await this.contactModel.find({ owner }).limit(perPage).skip(skip);
+		return await this.contactModel
+			.find({ owner: new Types.ObjectId(owner) })
+			.limit(perPage)
+			.skip(skip);
 	}
 
 	async findById(id: string) {

@@ -6,7 +6,6 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { compare, hash } from 'bcryptjs';
-
 import { User } from './user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 
@@ -21,15 +20,15 @@ export class UserService {
 		if (oldUser) {
 			throw new ConflictException('Email in use');
 		}
-		const password = await hash(dto.password, 10);
-		return await this.userModel.create({ ...dto, hashPass: password });
+		const hashPass = await hash(dto.password, 10);
+		return await this.userModel.create({ ...dto, hashPass });
 	}
 
 	async find(email: string) {
 		return this.userModel.findOne({ email });
 	}
 
-	async validate({ email, password }) {
+	async validate(email: string, password: string) {
 		const user = await this.find(email);
 		if (!user) {
 			throw new UnauthorizedException();
