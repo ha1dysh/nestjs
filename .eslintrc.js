@@ -23,5 +23,11 @@ module.exports = {
 		'@typescript-eslint/no-explicit-any': 'off',
 		'no-console': 'warn',
 		'no-warning-comments': ['warn', { terms: [''] }],
+		'prettier/prettier': [
+			'error',
+			{
+				endOfLine: 'auto',
+			},
+		],
 	},
 };
